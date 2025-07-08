@@ -1,7 +1,10 @@
 #include <score/gfx/Vulkan.hpp>
 
 #if defined(QT_FEATURE_vulkan) && QT_CONFIG(vulkan) && __has_include(<vulkan/vulkan.h>)
+#include "QRhiGles2.hpp"
+
 #include <QVulkanInstance>
+#include <QtQuick/QQuickWindow>
 
 #include <mutex>
 namespace score::gfx
@@ -27,7 +30,14 @@ QVulkanInstance* staticVulkanInstance(bool create)
 #endif
 
     QByteArrayList exts;
-    exts << "VK_KHR_get_physical_device_properties2";
+    exts << "VK_KHR_get_physical_device_properties2"
+     << "VK_KHR_deferred_host_operations"
+     << "VK_KHR_acceleration_structure"
+     << "VK_KHR_ray_tracing_pipeline"
+     << "VK_KHR_buffer_device_address"
+     << "VK_EXT_descriptor_indexing";
+
+
 
     if(auto v = instance.supportedApiVersion(); v >= QVersionNumber(1, 1))
     {
@@ -43,6 +53,7 @@ QVulkanInstance* staticVulkanInstance(bool create)
     {
       exts << "VK_KHR_maintenance1";
     }
+
 
     instance.setExtensions(exts);
     instance.setFlags(QVulkanInstance::Flag::NoDebugOutputRedirect);

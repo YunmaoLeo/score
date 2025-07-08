@@ -81,14 +81,32 @@ createRenderState(GraphicsApi graphicsApi, QSize sz, QWindow* window)
   if(graphicsApi == Vulkan)
   {
     QRhiVulkanInitParams params;
-    if(window)
-    {
-      params.inst = window->vulkanInstance();
-      params.window = window;
-    }
-    else
+    // if(window)
+    // {
+    //   params.inst = window->vulkanInstance();
+    //   params.window = window;
+    // }
+    // else
     {
       params.inst = score::gfx::staticVulkanInstance();
+      qDebug() << "Vulkan instance created with extensions:"
+               << params.inst->extensions();
+
+      if(window)
+      {
+        params.window = window;
+      }
+
+      params.deviceExtensions = {
+        QByteArrayLiteral("VK_KHR_ray_tracing_pipeline"),
+        QByteArrayLiteral("VK_KHR_acceleration_structure"),
+        QByteArrayLiteral("VK_KHR_deferred_host_operations"),
+        QByteArrayLiteral("VK_KHR_buffer_device_address"),
+        QByteArrayLiteral("VK_KHR_spirv_1_4"),
+        QByteArrayLiteral("VK_KHR_maintenance3"),
+        QByteArrayLiteral("VK_EXT_descriptor_indexing")
+    };
+
     }
     // Note: QShaderVersion still hardcoded to 100 in qrhvulkan.cpp as of qt 6.9
     state.version = QShaderVersion(100);
@@ -249,7 +267,7 @@ void ScreenNode::stopRendering()
   if(m_window)
   {
     m_window->m_canRender = false;
-    m_window->onRender = [](QRhiCommandBuffer&) {};
+    m_window->onRender = [](QRhiCommandBuffer&) { };
     if(m_window->state)
       m_window->state->renderer = {};
     else

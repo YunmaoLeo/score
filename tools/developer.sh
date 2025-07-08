@@ -199,6 +199,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH::${#CMAKE_PREFIX_PATH}-1}
   echo "$CMAKE_PREFIX_PATH"
 
+  CMAKE_PREFIX_PATH="/opt/Qt/6.9.0/lib/cmake"
+
   if [[ ! -f ./score ]]; then
     cmake -Wno-dev \
         $SCORE_PATH \
@@ -279,6 +281,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         -DCMAKE_BUILD_TYPE=Debug \
         -DSCORE_PCH=1 \
         -DSCORE_DYNAMIC_PLUGINS=1 \
+        -DCMAKE_PREFIX_PATH="/opt/Qt/6.9.0/lib/cmake" \
         -DCMAKE_COLOR_DIAGNOSTICS=1
   fi
   
