@@ -5,6 +5,7 @@
 #include "TemporalIntervalHeader.hpp"
 #include "TemporalIntervalView.hpp"
 
+#include <Process/ApplicationPlugin.hpp>
 #include <Process/LayerPresenter.hpp>
 #include <Process/LayerView.hpp>
 #include <Process/ProcessContext.hpp>
@@ -274,7 +275,7 @@ struct RequestOverlayMenuCallback
     using namespace Scenario::Command;
 
     Macro m{new AddProcessInNewSlot, self.context()};
-    if(auto p = m.createProcessInNewSlot(self.model(), key, dat))
+    if(m.createProcessInNewSlot(self.model(), key, dat))
     {
       m.commit();
     }
@@ -858,7 +859,7 @@ void TemporalIntervalPresenter::on_layerModelPutToFront(
       {
         if(ld.model().id() == proc.id())
         {
-          if(auto pres = ld.mainPresenter())
+          if(auto pres = ld.mainPresenter(); bool(pres))
           {
             auto factory
                 = m_context.processList.findDefaultFactory(ld.model().concreteKey());
@@ -1016,7 +1017,7 @@ void TemporalIntervalPresenter::selectedSlot(int i) const
     {
       if(!lay_slot->layers.empty())
       {
-        if(auto pres = lay_slot->layers.front().mainPresenter())
+        if(auto pres = lay_slot->layers.front().mainPresenter(); bool(pres))
         {
           m_context.focusDispatcher.focus(lay_slot->layers.front().mainPresenter());
           disp.select(m_model.processes.at(*proc));
@@ -1059,7 +1060,7 @@ void TemporalIntervalPresenter::requestSlotMenu(int slot, QPoint pos, QPointF sp
       {
         auto menu = new QMenu;
         auto& reg = score::GUIAppContext()
-                        .guiApplicationPlugin<ScenarioApplicationPlugin>()
+                        .applicationPlugin<Process::ApplicationPlugin>()
                         .layerContextMenuRegistrar();
         p.fillContextMenu(*menu, pos, sp, reg);
         menu->exec(pos);

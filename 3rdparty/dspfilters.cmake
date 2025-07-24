@@ -19,7 +19,7 @@ add_library(dspfilters
 )
 
 if(NOT MSVC AND NOT CMAKE_CROSSCOMPILING)
-  if(CMAKE_BUILD_TYPE MATCHES ".*Deb.*")
+  if(CMAKE_BUILD_TYPE MATCHES ".*Debug.*")
     target_compile_options(dspfilters PRIVATE -O3 -march=native)
   endif()
   target_compile_options(dspfilters PRIVATE -w)
@@ -27,6 +27,6 @@ endif()
 
 target_include_directories(
   dspfilters
-  PUBLIC SYSTEM
+  SYSTEM PUBLIC
     "${CMAKE_CURRENT_LIST_DIR}/DSPFilters/DSPFilters/include"
 )

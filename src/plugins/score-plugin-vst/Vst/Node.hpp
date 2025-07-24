@@ -99,8 +99,6 @@ public:
 
   void setupTimeInfo(const ossia::token_request& tk, ossia::exec_state_facade st)
   {
-    static const constexpr double ppq_reference = 960.;
-
     auto& time_info = fx->info;
     time_info.samplePos = this->m_processed_frames;
     time_info.sampleRate = st.sampleRate();
@@ -175,7 +173,12 @@ public:
     dispatch(effMainsChanged, 0, 0);
   }
 
-  std::string label() const noexcept override { return ""; }
+  std::string label() const noexcept override
+  {
+    char paramName[512] = {0};
+    fx->fx->dispatcher(fx->fx, effGetProductString, 0, 0, paramName, 0.0f);
+    return paramName;
+  }
 
   void all_notes_off() noexcept override
   {

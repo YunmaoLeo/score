@@ -10,6 +10,7 @@
 #include <Scenario/Application/ScenarioApplicationPlugin.hpp>
 #include <Scenario/Application/ScenarioValidity.hpp>
 #include <Scenario/Commands/Interval/ResizeInterval.hpp>
+#include <Scenario/Commands/LoadPresetCommand.hpp>
 #include <Scenario/Commands/Scenario/Displacement/MoveEventClassicFactory.hpp>
 #include <Scenario/Commands/Scenario/Displacement/MoveEventList.hpp>
 #include <Scenario/Commands/ScenarioCommandFactory.hpp>
@@ -78,6 +79,7 @@
 #include <QMetaType>
 #include <QPainterPath>
 
+#include <score_lib_process.hpp>
 #include <score_plugin_library.hpp>
 
 // #include <Interpolation/InterpolationFactory.hpp>
@@ -244,6 +246,7 @@ std::vector<score::InterfaceBase*> score_plugin_scenario::factories(
          ScenarioDisplayedElementsToolPaletteFactory>,
       FW<TriggerCommandFactory, ScenarioTriggerCommandFactory,
          BaseScenarioTriggerCommandFactory>,
+      FW<Process::LoadPresetCommandFactory, Scenario::Command::LoadPresetCommandFactory>,
       FW<DisplayedElementsProvider, DefaultDisplayedElementsProvider,
          ScenarioDisplayedElementsProvider, BaseScenarioDisplayedElementsProvider>,
       FW<score::DocumentDelegateFactory, Scenario::ScenarioDocumentFactory>,
@@ -302,7 +305,7 @@ std::vector<score::InterfaceBase*> score_plugin_scenario::guiFactories(
 
 std::vector<score::PluginKey> score_plugin_scenario::required() const
 {
-  return {score_plugin_library::static_key()};
+  return {score_lib_process::static_key(), score_plugin_library::static_key()};
 }
 
 #include <score/plugins/PluginInstances.hpp>
